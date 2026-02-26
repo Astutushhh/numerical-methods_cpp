@@ -9,7 +9,7 @@ class GaussForwardElimination {
         void forwardElimination(Eigen::MatrixXd& A);
         
     private:
-        void checkMatrix(Eigen::MatrixXd& A);
+        void isMatrixSingular(Eigen::MatrixXd& A, int matrixLength);
         void avoidIncreasingErr(Eigen::MatrixXd& A, int i, int matrixLength);
         void subtractNormolizedRow(Eigen::MatrixXd& A, int i, int matrixLength);
 };
@@ -26,14 +26,15 @@ class GaussBackwardSubstitution {
 
 class GaussSolver {
     public:
-        void checkMatrix(Eigen::MatrixXd& A);
-        void prepRectMatrix(Eigen::MatrixXd& A);
-        
+       
         Eigen::VectorXd solve(const Eigen::MatrixXd& A, const Eigen::VectorXd& b);
         Eigen::VectorXd getResidual() const;
         double getConditionNumber() const;
         
     private:
+        void checkMatrix(Eigen::MatrixXd& A);
+        void prepRectMatrix(Eigen::MatrixXd& A);
+
         GaussForwardElimination forward_;
         GaussBackwardSubstitution backward_;
         Eigen::VectorXd residual_;

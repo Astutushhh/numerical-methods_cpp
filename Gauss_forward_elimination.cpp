@@ -1,17 +1,5 @@
 ﻿#include "Gauss_solver.h"
 #include <iostream>
-//#include <stdexcept>
-
-void GaussForwardElimination::checkMatrix(Eigen::MatrixXd& A)
-{
-    if(!(A.rows() >= A.cols() - 1))
-        throw std::invalid_argument("Число уравнений меньше количества переменных");
-}
-
-void GaussForwardElimination::prepRectMatrix(Eigen::MatrixXd& A)
-{
-    A = A.topRows(A.cols()-1);
-}
 
 void GaussForwardElimination::avoidIncreasingErr(Eigen::MatrixXd& A, int i, int matrixLength)
 {
@@ -26,19 +14,28 @@ void GaussForwardElimination::subtractNormolizedRow(Eigen::MatrixXd& A, int i, i
         A.row(j) -= A.row(i) * A(j, i);   
 }
 
+void GaussForwardElimination::isMatrixSingular(Eigen::MatrixXd& A, int matrixLength)
+{
+    constexpr double kEps = 1e-12; // значение константы задается на этапе компиляции. Машинный эпсилон примерно е-16 для дабла, но мы учли накопление ошибки
+    
+    for(int i; i < matrixLength; i++)
+        if(kEps >= A.col(i).cwiseAbs().maxCoeff())
+            throw std::invalid_argument("Матрица вырождена");   
+}
+
 void GaussForwardElimination::forwardElimination(Eigen::MatrixXd& A)
 {
 
     int matrixLength = A.rows();
+
+    GaussForwardElimination::isMatrixSingular(A, matrixLength);
+
     for(int i = 0; i < matrixLength; i++)
     {
         GaussForwardElimination::avoidIncreasingErr(A, i, matrixLength);
         
-        if(A(i,i))//Лучше проверить до входа в цикла, зарарнее и быстрее прервать выполнение не тратя лишнее время и ресурсы
-            A.row(i) /= A(i,i);                                                // Нормализовали строку
-        else
-            std::cout << "Диагональный элемент матрицы ноль, матрица некорректна" << std::endl;
-
+        A.row(i) /= A(i,i); // Нормализовали строку
+        
         GaussForwardElimination::subtractNormolizedRow(A, i, matrixLength);
     }
     
