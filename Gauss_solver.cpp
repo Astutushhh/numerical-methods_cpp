@@ -71,24 +71,57 @@ double GaussSolver::absInfiniteResidualNorm()
     return absInfiniteNorm_;
 }
 
-double GaussSolver::relFirstResidualNorm()
+void GaussSolver::relFirstResidualNorm()//сделал приватной
 {
-    absFirstNormExist();
     relFirstNorm_ = absFirstNorm_/b_.lpNorm<1>();
-    return relFirstNorm_;
 }
 
-double GaussSolver::relInfiniteResidualNorm()
+void GaussSolver::relInfiniteResidualNorm()//сделал приватной
 {
-    absInfNormExist();
     relInfiniteNorm_ = absInfiniteNorm_/b_.lpNorm<Eigen::Infinity>();
-    return relInfiniteNorm_;
 }
 
 double GaussSolver::conditionNumber()
 {
     condNum_ = A_.norm() * A_.inverse().norm();
+    condNumBool_ = true;
     return condNum_;
+}
+//
+double GaussSolver::getAbsErrorBoundFirst()
+{
+    absFirstNormExist();
+    absErrorBoundFirst_ = absFirstNorm_ * A_.inverse().norm();
+    return absErrorBoundFirst_;
+}
+
+double GaussSolver::getAbsErrorBoundInf()
+{
+    absInfNormExist();
+    absErrorBoundInfinite_ = absInfiniteNorm_ * A_.inverse().norm();
+    return absErrorBoundInfinite_;
+}
+
+double GaussSolver::getRelErrorBoundFirst()
+{
+    absFirstNormExist();
+    condNumExist(); 
+
+    relFirstResidualNorm();
+    
+    relErrorBoundFirst_ = relFirstNorm_ * condNum_;
+    return relErrorBoundFirst_;
+}
+
+double GaussSolver::getRelErrorBoundInf()
+{
+    absInfNormExist();
+    condNumExist();
+
+    relInfiniteResidualNorm();
+
+    relErrorBoundInfinite_ = relInfiniteNorm_ * condNum_;
+    return relErrorBoundInfinite_;
 }
 
 void GaussSolver::solutionExists() const
@@ -106,4 +139,10 @@ void GaussSolver::absInfNormExist() const
 {
     if(!absInftNormBool_)
         throw std::invalid_argument("Должна быть найдена абсолютная inf норма перед вызовом функции relInfiniteResidualNorm()");
+}
+
+void GaussSolver::condNumExist() const
+{
+    if(!condNumBool_)
+        throw std::invalid_argument("Должен быть найден порядок числа обусловленности матрицы перед вызовом функции");
 }

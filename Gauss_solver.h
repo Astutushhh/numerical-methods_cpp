@@ -27,10 +27,14 @@ class GaussSolver {
         Eigen::VectorXd solve();
         double absFirstResidualNorm();
         double absInfiniteResidualNorm();
-
-        double relFirstResidualNorm();
-        double relInfiniteResidualNorm();
         
+        double getAbsErrorBoundFirst();
+        double getAbsErrorBoundInf();
+
+        double getRelErrorBoundFirst();
+        double getRelErrorBoundInf();
+
+
         double conditionNumber();       
                 
     private:
@@ -44,7 +48,12 @@ class GaussSolver {
         void absFirstNormExist() const;
         void absInfNormExist() const;
 
+        void condNumExist() const;
+
         void calcResidual();
+
+        void relFirstResidualNorm();
+        void relInfiniteResidualNorm();
 
         Eigen::MatrixXd augmented_;
         Eigen::MatrixXd A_;
@@ -57,6 +66,12 @@ class GaussSolver {
         double relFirstNorm_;
         double relInfiniteNorm_;
 
+        double absErrorBoundFirst_;
+        double absErrorBoundInfinite_;
+
+        double relErrorBoundFirst_;
+        double relErrorBoundInfinite_;
+
         double condNum_;
 
         GaussForwardElimination forward_;
@@ -65,4 +80,5 @@ class GaussSolver {
         bool solved_ = false;
         bool absFirstNormBool_ = false;
         bool absInftNormBool_ = false;
+        bool condNumBool_ = false;
 };
