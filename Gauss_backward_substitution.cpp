@@ -1,15 +1,13 @@
 ﻿#include "Gauss_solver.h"
 #include "iostream"
 
-// Матрица nxn... Нужно написать провеку и уддаление лишних строк в случаи наличия 
-
 // rowLen - длина строки в которой до сих пор столбец b
-double GaussBackwardSubstitution::rowCalc(Eigen::RowVectorXd row, Eigen::VectorXd solution, int rowLen)
+double GaussBackwardSubstitution::rowCalc(Eigen::RowVectorXd row, Eigen::VectorXd solution, int rowLen) const
 {  
     return row(rowLen - 1) - row.head(rowLen - 1).dot(solution);//перенос в левую часть -> вычли из b
 }
-
-Eigen::VectorXd GaussBackwardSubstitution::backwardSubstitution(Eigen::MatrixXd& U)
+ 
+Eigen::VectorXd GaussBackwardSubstitution::backwardSubstitution(Eigen::MatrixXd& U) const
 {
     int matrixDimension = U.rows();
 

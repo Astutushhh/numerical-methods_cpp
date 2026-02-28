@@ -1,9 +1,10 @@
 ﻿#include <eigen3/Eigen/Dense>
+
 #include <iostream>
 #include <windows.h>
-#include "Gauss_solver.h" 
 
-
+#include "Gauss_solver.h"
+#include "build_and_print_report.h" 
 
 int main() {
 
@@ -11,21 +12,29 @@ int main() {
     SetConsoleCP(CP_UTF8);
 
     using namespace Eigen;
-    using namespace std;
 
-    MatrixXd matrix(4, 4);
-    matrix << 31.2000,        -1.3200,        -7.6800,         4.0900,
-              7.2300,      -126.0000,         7.1400,         3.0400,
-              9.4900,         6.4000,         6.0000,         8.4500,
-              2.6800,        -3.2900,         0.2800,        13.4000;
+    MatrixXd matrixGood(4, 4);
+    matrixGood << -150.6000,        -8.2900,         7.3900,         8.5700,
+                     7.7000,       -77.0000,        -0.8900,        -2.6200,
+                     4.3300,         3.0300,       146.8000,        -4.2800,
+                     8.7400,        -2.6000,        -1.2700,      -112.4000;
+    VectorXd bGood(4);
+    bGood << -484.3700, -355.0300, 1077.1400, 566.3300;
 
-    VectorXd b(4);
-    b << -83.3200, 38.9000, -56.7000, -504.0900;
+    MatrixXd matrixBad(4, 4);
+    matrixBad << 60.8800,         2.2960,       100.7360,      -660.6400,
+                -90.7200,        -3.4450,      -149.7750,       983.4900,
+                 15.1200,         0.5740,        25.0140,      -164.0200,
+                  7.5600,         0.2870,        12.4970,       -81.9900;
+    VectorXd bBad(4);
+    bBad << -306.7360, 457.2250, -76.1540, -38.0870;
 
-    GaussSolver solver(matrix, b);
+    GaussSolver solverGood(matrixGood, bGood);
+    GaussSolver solverBad(matrixBad, bBad);
     
-    solver.solve();
+    std::cout << "Нахождение необходимых параметров для хорошо обусловленной матрицы из 6 варианта" << std::endl;
+    buildAndPrintReport(solverGood);
 
-    cout << solver.solution_ << endl;
-    std::cin.get();
+    std::cout << "Нахождение необходимых параметров для плохо обусловленной матрицы из 6 варианта" << std::endl;
+    buildAndPrintReport(solverBad);
 }

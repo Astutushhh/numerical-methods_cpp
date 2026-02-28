@@ -6,44 +6,63 @@
 
 class GaussForwardElimination {
     public:
-        void forwardElimination(Eigen::MatrixXd& A);
+        Eigen::MatrixXd forwardElimination(Eigen::MatrixXd A) const;
     private:
-        void isMatrixSingular(Eigen::MatrixXd& A, int matrixLength);
-        void avoidIncreasingErr(Eigen::MatrixXd& A, int i, int matrixLength);
-        void subtractNormolizedRow(Eigen::MatrixXd& A, int i, int matrixLength);
+        void isMatrixSingular(Eigen::MatrixXd& A, int matrixLength) const;
+        void avoidIncreasingErr(Eigen::MatrixXd& A, int i, int matrixLength) const;
+        void subtractNormolizedRow(Eigen::MatrixXd& A, int i, int matrixLength) const;
 };
 
 class GaussBackwardSubstitution {
     public:
-        Eigen::VectorXd backwardSubstitution(Eigen::MatrixXd& U);
+        Eigen::VectorXd backwardSubstitution(Eigen::MatrixXd& U) const;
     private:
-        double rowCalc(Eigen::RowVectorXd row, Eigen::VectorXd solution, int rowLen);
+        double rowCalc(Eigen::RowVectorXd row, Eigen::VectorXd solution, int rowLen) const;
 };
 
 class GaussSolver {
     public:
         GaussSolver(Eigen::MatrixXd& A, Eigen::VectorXd& b);
 
-        void solve();
+        Eigen::VectorXd solve();
+        double absFirstResidualNorm();
+        double absInfiniteResidualNorm();
 
-        Eigen::VectorXd getResidual() const;
-        double getConditionNumber() const;
-
-        Eigen::VectorXd solution_;
+        double relFirstResidualNorm();
+        double relInfiniteResidualNorm();
+        
+        double conditionNumber();       
+                
     private:
-        void checkMatrix(const Eigen::MatrixXd& A);
-        void prepRectMatrixIfItsNeed(Eigen::MatrixXd& A);
+        void checkMatrix(const Eigen::MatrixXd& A) const;
+        void prepRectMatrixIfItsNeed(Eigen::MatrixXd& A) const;
 
-        void checkDimensions(const Eigen::MatrixXd& A, const Eigen::VectorXd& b);
-        Eigen::MatrixXd makeAugmentedMatrix(const Eigen::MatrixXd& A, const Eigen::VectorXd& b);
+        void checkDimensions(const Eigen::MatrixXd& A, const Eigen::VectorXd& b) const;
+        Eigen::MatrixXd makeAugmentedMatrix(const Eigen::MatrixXd& A, const Eigen::VectorXd& b) const;
+
+        void solutionExists() const;
+        void absFirstNormExist() const;
+        void absInfNormExist() const;
+
+        void calcResidual();
 
         Eigen::MatrixXd augmented_;
+        Eigen::MatrixXd A_;
+        Eigen::VectorXd b_;
+        Eigen::VectorXd solution_;
+        Eigen::VectorXd residual_;
+        double absFirstNorm_;
+        double absInfiniteNorm_;
+
+        double relFirstNorm_;
+        double relInfiniteNorm_;
+
+        double condNum_;
 
         GaussForwardElimination forward_;
         GaussBackwardSubstitution backward_;
-        
 
-        Eigen::VectorXd residual_;
-        double cond_ = 0.0;
         bool solved_ = false;
+        bool absFirstNormBool_ = false;
+        bool absInftNormBool_ = false;
 };

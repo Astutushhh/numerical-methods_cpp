@@ -11,6 +11,7 @@
                 "${workspaceFolder}\\Gauss_solver.cpp",
                 "${workspaceFolder}\\Gauss_forward_elimination.cpp",
                 "${workspaceFolder}\\Gauss_backward_substitution.cpp",
+                "${workspaceFolder}\\build_and_print_report.cpp",
                 "-o",
                 "${workspaceFolder}\\main.exe"
             ],
