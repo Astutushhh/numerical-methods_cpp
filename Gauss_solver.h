@@ -63,9 +63,6 @@ class GaussSolver {
         double absFirstNorm_;
         double absInfiniteNorm_;
 
-        double relFirstNorm_;
-        double relInfiniteNorm_;
-
         double absErrorBoundFirst_;
         double absErrorBoundInfinite_;
 

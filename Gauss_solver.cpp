@@ -71,23 +71,13 @@ double GaussSolver::absInfiniteResidualNorm()
     return absInfiniteNorm_;
 }
 
-void GaussSolver::relFirstResidualNorm()//сделал приватной
-{
-    relFirstNorm_ = absFirstNorm_/b_.lpNorm<1>();
-}
-
-void GaussSolver::relInfiniteResidualNorm()//сделал приватной
-{
-    relInfiniteNorm_ = absInfiniteNorm_/b_.lpNorm<Eigen::Infinity>();
-}
-
 double GaussSolver::conditionNumber()
 {
     condNum_ = A_.norm() * A_.inverse().norm();
     condNumBool_ = true;
     return condNum_;
 }
-//
+
 double GaussSolver::getAbsErrorBoundFirst()
 {
     absFirstNormExist();
@@ -106,10 +96,8 @@ double GaussSolver::getRelErrorBoundFirst()
 {
     absFirstNormExist();
     condNumExist(); 
-
-    relFirstResidualNorm();
     
-    relErrorBoundFirst_ = relFirstNorm_ * condNum_;
+    relErrorBoundFirst_ = (absFirstNorm_ / b_.lpNorm<1>()) * condNum_;
     return relErrorBoundFirst_;
 }
 
@@ -118,9 +106,7 @@ double GaussSolver::getRelErrorBoundInf()
     absInfNormExist();
     condNumExist();
 
-    relInfiniteResidualNorm();
-
-    relErrorBoundInfinite_ = relInfiniteNorm_ * condNum_;
+    relErrorBoundInfinite_ = (absInfiniteNorm_/b_.lpNorm<Eigen::Infinity>()) * condNum_;
     return relErrorBoundInfinite_;
 }
 
