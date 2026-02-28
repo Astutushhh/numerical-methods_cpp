@@ -19,5 +19,5 @@ Eigen::VectorXd GaussBackwardSubstitution::backwardSubstitution(Eigen::MatrixXd&
         solution(i) = rowCalc(U.row(i), solution, matrixDimension + 1);   
     
     return solution;
-
 }
+

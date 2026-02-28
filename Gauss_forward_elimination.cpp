@@ -28,15 +28,15 @@ void GaussForwardElimination::forwardElimination(Eigen::MatrixXd& A)
 
     int matrixLength = A.rows();
 
-    GaussForwardElimination::isMatrixSingular(A, matrixLength);
+    isMatrixSingular(A, matrixLength);
 
     for(int i = 0; i < matrixLength; i++)
     {
-        GaussForwardElimination::avoidIncreasingErr(A, i, matrixLength);
+        avoidIncreasingErr(A, i, matrixLength);
         
         A.row(i) /= A(i,i); // Нормализовали строку
         
-        GaussForwardElimination::subtractNormolizedRow(A, i, matrixLength);
+        subtractNormolizedRow(A, i, matrixLength);
     }
     
 }

@@ -1,6 +1,7 @@
 ﻿#include <eigen3/Eigen/Dense>
 #include <iostream>
 #include <windows.h>
+#include "Gauss_solver.h" 
 
 
 
@@ -12,37 +13,19 @@ int main() {
     using namespace Eigen;
     using namespace std;
 
-    // Матрица системы
-    MatrixXd A(3, 3); // Заполняется элементами попорядку(сначала первая строка слева направо, потом втора и тд), первый элемент - номер строки с 0, второй - номер столбца с 0
-    A << 2, 1, 1, 4, 3, 3, 8, 7, 9;
+    MatrixXd matrix(4, 4);
+    matrix << 31.2000,        -1.3200,        -7.6800,         4.0900,
+              7.2300,      -126.0000,         7.1400,         3.0400,
+              9.4900,         6.4000,         6.0000,         8.4500,
+              2.6800,        -3.2900,         0.2800,        13.4000;
+
+    VectorXd b(4);
+    b << -83.3200, 38.9000, -56.7000, -504.0900;
+
+    GaussSolver solver(matrix, b);
     
-    // Вектор правой части
-    VectorXd b(3);
-    b << 1, 3, 7;
-    
-    cout << "=== Метод Гаусса ===" << endl;
-    cout << "\nМатрица A:\n" << A << endl;
-    cout << "\nВектор b:\n" << b << endl;
-    
-    // Решение
-    VectorXd x = A.colPivHouseholderQr().solve(b);
-    
-    cout << "\nРешение x:\n" << x << endl;
-    
-    // Невязка
-    VectorXd residual = A * x - b;
-    cout << "\nНевязка (A*x - b):\n" << residual << endl;
-    
-    // Нормы невязки
-    double norm1 = residual.norm();
-    double norm_inf = residual.cwiseAbs().maxCoeff();
-    
-    cout << "\n||невязка||₂ = " << norm1 << endl;
-    cout << "||невязка||_∞ = " << norm_inf << endl;
-    
-    cin.ignore();
-    cout << "\nНажмите Enter для выхода...";
-    cin.get();
-    
-    return 0;
+    solver.solve();
+
+    cout << solver.solution_ << endl;
+    std::cin.get();
 }
