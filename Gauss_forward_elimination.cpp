@@ -18,7 +18,7 @@ void GaussForwardElimination::isMatrixSingular(Eigen::MatrixXd& A, int matrixLen
 {
     constexpr double kEps = 1e-12; // значение константы задается на этапе компиляции. Машинный эпсилон примерно е-16 для дабла, но мы учли накопление ошибки
     
-    for(int i; i < matrixLength; i++)
+    for(int i = 0; i < matrixLength; i++)
         if(kEps >= A.col(i).cwiseAbs().maxCoeff())
             throw std::invalid_argument("Матрица вырождена");   
 }
